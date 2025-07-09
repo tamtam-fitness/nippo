@@ -83,18 +83,47 @@
 
 このシステムはClaude Codeのスラッシュコマンド機能を使用します。
 
-1. プロジェクトディレクトリに移動
-2. `.claude/commands/` ディレクトリが自動的に作成され、以下のコマンドが利用可能になります：
-   - `add_record_to_nippo.md`
-   - `finalize_nippo.md`
-   - `set_goals.md`
-   - `set_weekly_goal.md`
+### 個人設定として全プロジェクトで使用する場合（推奨）
+
+1. 以下のコマンドを `~/.claude/commands/` にコピーします：
+   ```bash
+   mkdir -p ~/.claude/commands
+   # このリポジトリからコマンドをコピー
+   cp path/to/nippo/.claude/commands/*.md ~/.claude/commands/
+   ```
+
+2. 全てのプロジェクトでスラッシュコマンドが利用可能になります：
+   - `/add_record_to_nippo`
+   - `/finalize_nippo`
+   - `/set_goals`
+   - `/set_weekly_goal`
+
+### プロジェクト固有として使用する場合
+
+1. このリポジトリの `.claude/commands/` ディレクトリを対象プロジェクトにコピー
+2. プロジェクトディレクトリ内でのみコマンドが利用可能
 
 ## ファイル構成
 
+### 個人設定として使用する場合
 ```
-nippo/
-├── README.md
+~/.claude/commands/
+├── add_record_to_nippo.md
+├── finalize_nippo.md
+├── set_goals.md
+└── set_weekly_goal.md
+
+# プロジェクトディレクトリ（任意の場所）
+your-project/
+├── reports/
+│   └── nippo_YYYYMMDD_HHMMSS.txt (分析完了後に作成)
+├── goals.txt (目標設定後に作成)
+└── nippo_draft.txt (記録中に作成)
+```
+
+### プロジェクト固有として使用する場合
+```
+your-project/
 ├── .claude/
 │   └── commands/
 │       ├── add_record_to_nippo.md
