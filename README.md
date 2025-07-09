@@ -83,58 +83,75 @@
 
 このシステムはClaude Codeのスラッシュコマンド機能を使用します。
 
-### 個人設定として全プロジェクトで使用する場合（推奨）
+### クイックインストール（推奨）
 
-1. 以下のコマンドを `~/.claude/commands/` にコピーします：
+```bash
+# 1. リポジトリをクローン
+git clone https://github.com/tamtam-fitness/nippo.git
+cd nippo
+
+# 2. インストールスクリプトを実行
+./install.sh
+```
+
+これにより：
+- 全てのプロジェクトでnippoコマンドが利用可能になります
+- 日報ファイルはクローンしたnippoディレクトリ内に保存されます
+- `~/.nippo_config` に設定が保存されます
+
+### 手動セットアップ
+
+#### 個人設定として全プロジェクトで使用する場合
+
+1. リポジトリをクローン：
    ```bash
-   mkdir -p ~/.claude/commands
-   # このリポジトリからコマンドをコピー
-   cp path/to/nippo/.claude/commands/*.md ~/.claude/commands/
+   git clone https://github.com/tamtam-fitness/nippo.git ~/nippo
    ```
 
-2. 全てのプロジェクトでスラッシュコマンドが利用可能になります：
-   - `/add_record_to_nippo`
-   - `/finalize_nippo`
-   - `/set_goals`
-   - `/set_weekly_goal`
+2. コマンドを `~/.claude/commands/` にコピー：
+   ```bash
+   mkdir -p ~/.claude/commands
+   cp ~/nippo/.claude/commands/*.md ~/.claude/commands/
+   ```
 
-### プロジェクト固有として使用する場合
+3. 設定ファイルを作成：
+   ```bash
+   echo 'NIPPO_HOME="~/nippo"' > ~/.nippo_config
+   ```
+
+#### プロジェクト固有として使用する場合
 
 1. このリポジトリの `.claude/commands/` ディレクトリを対象プロジェクトにコピー
 2. プロジェクトディレクトリ内でのみコマンドが利用可能
 
 ## ファイル構成
 
-### 個人設定として使用する場合
+### インストール後の構成
 ```
+# グローバル設定
 ~/.claude/commands/
 ├── add_record_to_nippo.md
 ├── finalize_nippo.md
 ├── set_goals.md
 └── set_weekly_goal.md
 
-# プロジェクトディレクトリ（任意の場所）
-your-project/
+~/.nippo_config                    # 設定ファイル（NIPPO_HOME設定）
+
+# nippoリポジトリ（クローンした場所）
+~/nippo/                           # または任意の場所
+├── .claude/
+│   └── commands/                  # オリジナルのコマンドファイル
 ├── reports/
-│   └── nippo_YYYYMMDD_HHMMSS.txt (分析完了後に作成)
-├── goals.txt (目標設定後に作成)
-└── nippo_draft.txt (記録中に作成)
+│   └── nippo_YYYYMMDD_HHMMSS.txt # 分析レポート
+├── goals.txt                      # 目標設定
+├── nippo_draft.txt                # 日報ドラフト
+├── install.sh                     # インストールスクリプト
+└── README.md                      # このファイル
 ```
 
-### プロジェクト固有として使用する場合
-```
-your-project/
-├── .claude/
-│   └── commands/
-│       ├── add_record_to_nippo.md
-│       ├── finalize_nippo.md
-│       ├── set_goals.md
-│       └── set_weekly_goal.md
-├── reports/
-│   └── nippo_YYYYMMDD_HHMMSS.txt (分析完了後に作成)
-├── goals.txt (目標設定後に作成)
-└── nippo_draft.txt (記録中に作成)
-```
+### 実際の使用時
+どのプロジェクトディレクトリからでも nippo コマンドが利用可能で、
+全ての日報データは `NIPPO_HOME`（nippoをクローンした場所）に集約されます。
 
 ## 設計思想
 
