@@ -11,9 +11,10 @@ description: "日報のドラフトを分析し、エンジニア成長支援レ
 
 !if [ -f nippo_draft.txt ]; then
     TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
-    cp nippo_draft.txt "nippo_${TIMESTAMP}.txt"
+    mkdir -p reports
+    cp nippo_draft.txt "reports/nippo_${TIMESTAMP}.txt"
     rm nippo_draft.txt
-    echo "日報を finalize しました: nippo_${TIMESTAMP}.txt"
+    echo "日報を finalize しました: reports/nippo_${TIMESTAMP}.txt"
 else
     echo "nippo_draft.txt が見つかりません。まず /add_record_to_nippo でタスクを追加してください。"
 fi

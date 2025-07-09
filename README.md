@@ -101,9 +101,10 @@ nippo/
 │       ├── finalize_nippo.md
 │       ├── set_goals.md
 │       └── set_weekly_goal.md
+├── reports/
+│   └── nippo_YYYYMMDD_HHMMSS.txt (分析完了後に作成)
 ├── goals.txt (目標設定後に作成)
-├── nippo_draft.txt (記録中に作成)
-└── nippo_YYYYMMDD_HHMMSS.txt (分析完了後に作成)
+└── nippo_draft.txt (記録中に作成)
 ```
 
 ## 設計思想
