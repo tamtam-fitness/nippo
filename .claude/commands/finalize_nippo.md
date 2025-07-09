@@ -15,11 +15,16 @@ description: "日報のドラフトを分析し、エンジニア成長支援レ
 !if [ -f "${NIPPO_HOME}/nippo_draft.txt" ]; then
     TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
     mkdir -p "${NIPPO_HOME}/reports"
-    cp "${NIPPO_HOME}/nippo_draft.txt" "${NIPPO_HOME}/reports/nippo_${TIMESTAMP}.txt"
+    REPORT_FILE="${NIPPO_HOME}/reports/nippo_${TIMESTAMP}.txt"
+    cp "${NIPPO_HOME}/nippo_draft.txt" "$REPORT_FILE"
     rm "${NIPPO_HOME}/nippo_draft.txt"
-    echo "日報を finalize しました: ${NIPPO_HOME}/reports/nippo_${TIMESTAMP}.txt"
+    echo "📝 日報を保存しました: $REPORT_FILE"
+    echo ""
+    echo "以下、分析結果を表示します："
+    echo "================================"
 else
     echo "nippo_draft.txt が見つかりません。まず /add_record_to_nippo でタスクを追加してください。"
+    exit 1
 fi
 
 @${NIPPO_HOME}/nippo_draft.txt
