@@ -32,7 +32,9 @@ EOF
 
 # Update finalize_nippo.md to use NIPPO_HOME
 echo "🔧 Configuring commands..."
-sed -i.bak 's|mkdir -p reports|source ~/.nippo_config 2>/dev/null || true; mkdir -p "${NIPPO_HOME:-$(pwd)}/reports"|g' ~/.claude/commands/finalize_nippo.md
+sed -i.bak \
+  's@mkdir -p reports@source ~/.nippo_config 2>/dev/null || true; mkdir -p "${NIPPO_HOME:-$(pwd)}/reports"@g' \
+  ~/.claude/commands/finalize_nippo.md
 sed -i.bak 's|"reports/nippo_|"${NIPPO_HOME:-$(pwd)}/reports/nippo_|g' ~/.claude/commands/finalize_nippo.md
 sed -i.bak 's|goals.txt|${NIPPO_HOME:-$(pwd)}/goals.txt|g' ~/.claude/commands/*.md
 sed -i.bak 's|nippo_draft.txt|${NIPPO_HOME:-$(pwd)}/nippo_draft.txt|g' ~/.claude/commands/*.md
