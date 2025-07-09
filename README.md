@@ -146,7 +146,8 @@ cd nippo
 ├── add_record_to_nippo.md
 ├── finalize_nippo.md
 ├── set_goals.md
-└── set_weekly_goal.md
+├── set_weekly_goal.md
+└── cd_to_nippo_reports.md
 
 ~/.nippo_config                    # 設定ファイル（NIPPO_HOME設定）
 
