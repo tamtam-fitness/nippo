@@ -1,58 +1,46 @@
 #!/bin/bash
 
-# Nippo Installation Script
-# This script sets up the nippo system globally for Claude Code
+# 日報システムのインストールスクリプト
 
 set -e
 
-echo "🚀 Nippo Installation Script"
-echo "==========================="
+echo "🚀 日報システムをインストールしています..."
 
-# Get the directory where the script is located (nippo repo)
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-NIPPO_HOME="$SCRIPT_DIR"
+# ホームディレクトリのClaude設定にコマンドをコピー
+CLAUDE_HOME="$HOME/.claude"
+COMMANDS_DIR="$CLAUDE_HOME/commands"
 
-echo "📍 Nippo home directory: $NIPPO_HOME"
+echo "📁 Claude設定ディレクトリ: $CLAUDE_HOME"
 
-# Create necessary directories
-echo "📁 Creating directories..."
-mkdir -p "$NIPPO_HOME/reports"
-mkdir -p ~/.claude/commands
+# ディレクトリ作成
+mkdir -p "$COMMANDS_DIR"
 
-# Copy commands to global Claude directory
-echo "📋 Installing commands..."
-cp "$NIPPO_HOME/.claude/commands/"*.md ~/.claude/commands/
-
-# Create or update nippo config file
-echo "⚙️  Setting up configuration..."
-cat > ~/.nippo_config <<EOF
-# Nippo Configuration
-NIPPO_HOME="$NIPPO_HOME"
-EOF
-
-# Update finalize_nippo.md to use NIPPO_HOME
-echo "🔧 Configuring commands..."
-sed -i.bak \
-  's@mkdir -p reports@source ~/.nippo_config 2>/dev/null || true; mkdir -p "${NIPPO_HOME:-$(pwd)}/reports"@g' \
-  ~/.claude/commands/finalize_nippo.md
-sed -i.bak 's|"reports/nippo_|"${NIPPO_HOME:-$(pwd)}/reports/nippo_|g' ~/.claude/commands/finalize_nippo.md
-sed -i.bak 's|goals.txt|${NIPPO_HOME:-$(pwd)}/goals.txt|g' ~/.claude/commands/*.md
-sed -i.bak 's|nippo_draft.txt|${NIPPO_HOME:-$(pwd)}/nippo_draft.txt|g' ~/.claude/commands/*.md
-
-# Clean up backup files
-rm -f ~/.claude/commands/*.bak
+# コマンドファイルのコピー
+if [ -d ".claude/commands" ]; then
+    echo "📋 日報コマンドをコピーしています..."
+    cp .claude/commands/nippo-*.md "$COMMANDS_DIR/"
+    echo "✅ コマンドファイルをコピーしました:"
+    ls -1 "$COMMANDS_DIR"/nippo-*.md | sed 's/^/  - /'
+else
+    echo "❌ .claude/commandsディレクトリが見つかりません"
+    exit 1
+fi
 
 echo ""
-echo "✅ Installation complete!"
+echo "✅ インストール完了!"
 echo ""
-echo "📝 The following commands are now available globally in Claude Code:"
-echo "   - /add_record_to_nippo    : Add tasks to daily report"
-echo "   - /finalize_nippo         : Generate analysis report"
-echo "   - /set_goals              : Set monthly goals"
-echo "   - /set_weekly_goal        : Set weekly goals"
-echo "   - /cd_to_nippo_reports    : Navigate to reports directory"
+echo "🎯 使用可能なコマンド:"
+echo "- /nippo-goals \"今月は新機能3つリリース\""
+echo "- /nippo-add \"バグ#123修正完了\""
+echo "- /nippo-show"
+echo "- /nippo-finalize"
 echo ""
-echo "📂 Reports will be saved to: $NIPPO_HOME/reports/"
-echo "📋 Goals and drafts will be saved to: $NIPPO_HOME/"
+echo "📂 作業ファイルは /tmp に作成されます:"
+echo "- /tmp/nippo-goals.txt (目標)"
+echo "- /tmp/nippo-YYYY-MM-DD.md (日報)"
+echo "- /tmp/nippo-report_タイムスタンプ.md (レポート)"
 echo ""
-echo "🎉 You can now use nippo commands in any project!"
+echo "💡 使い方:"
+echo "1. /nippo-goals で目標設定"
+echo "2. 作業中に /nippo-add でタスク記録"
+echo "3. 終業時に /nippo-finalize でAI分析レポート生成"

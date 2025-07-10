@@ -1,54 +1,76 @@
 ---
-title: "Finalize Nippo"
-description: "日報のドラフトを分析し、エンジニア成長支援レポートを作成します"
+title: "Nippo Finalize"
+description: "日報を完成させる"
 ---
 
-# Finalize Nippo
+# 日報を完成させる
 
-日報のドラフトファイルを読み込み、シニアエンジニアへの成長を支援する詳細分析レポートを作成します。
+本日の日報（/tmp/nippo.$(date +%Y-%m-%d).md）を完成させ、日報テンプレートから日報レポートに移動します。
 
-## 実行内容
+## 実行内容:
 
-!# Load nippo configuration
-!source ~/.nippo_config 2>/dev/null || NIPPO_HOME="$(pwd)"
+1. **進捗状況の集計**
+   - 作業ログから本日の活動を分析
+   - 達成した項目と未達成の項目を整理
 
-!if [ -f "${NIPPO_HOME}/nippo_draft.txt" ]; then
-    TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
-    mkdir -p "${NIPPO_HOME}/reports"
-    REPORT_FILE="${NIPPO_HOME}/reports/nippo_${TIMESTAMP}.txt"
-    cp "${NIPPO_HOME}/nippo_draft.txt" "$REPORT_FILE"
-    rm "${NIPPO_HOME}/nippo_draft.txt"
-    echo "📝 日報を保存しました: $REPORT_FILE"
-    echo ""
-    echo "以下、分析結果を表示します："
-    echo "================================"
+2. **各セクションの補完**
+   - 空欄になっているセクションを埋める
+   - 作業ログから重要なポイントを抽出
+
+3. **最終レポートの生成**
+   - 日報テンプレートをもとに構造化されたレポートを作成
+   - /tmp/nippo-report_タイムスタンプ.md として保存
+
+4. **ファイルの整理**
+   - /tmp の日報ファイルを削除（バックアップ後）
+
+!NIPPO_FILE="/tmp/nippo.$(date +%Y-%m-%d).md" && if [ -f "$NIPPO_FILE" ]; then
+  TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
+  REPORT_FILE="/tmp/nippo-report_${TIMESTAMP}.md"
+
+  echo "📝 日報を完成させています..."
+
+  # 元ファイルを読み込んで AI に処理を依頼
+  echo "元の日報ファイル内容:"
+  cat "$NIPPO_FILE"
+  echo ""
+  echo "================================"
+  echo ""
+
+  # 完了後に日報ファイルのみを削除（ゴールズファイルは保持）
+  rm "$NIPPO_FILE"
+  echo ""
+  echo "✅ 日報を完成させました: $REPORT_FILE"
+  echo "📂 日報ファイルを削除しました（目標ファイルは保持）"
 else
-    echo "nippo_draft.txt が見つかりません。まず /add_record_to_nippo でタスクを追加してください。"
-    exit 1
+  echo "❌ 日報ファイルが見つかりません: $NIPPO_FILE"
+  echo "まず /nippo-add でタスクを記録してください。"
+  exit 1
 fi
 
-@${NIPPO_HOME}/nippo_draft.txt
+@nippo_draft.txt
 
-!if [ -f "${NIPPO_HOME}/goals.txt" ]; then
-    echo "=== 目標設定 ==="
-    cat "${NIPPO_HOME}/goals.txt"
-    echo ""
-else
-    echo "=== 目標設定 ==="
-    echo "MONTHLY_GOAL=目標が設定されていません。/set_goals で設定してください。"
-    echo "WEEKLY_GOAL=目標が設定されていません。/set_weekly_goal で設定してください。"
-    echo ""
-fi
+!GOALS_FILE="/tmp/nippo-goals.txt" && if [ -f "$GOALS_FILE" ]; then echo "=== 目標設定 ==="; cat "$GOALS_FILE"; echo ""; else echo "=== 目標設定 ==="; echo "目標が設定されていません。/nippo-goals で設定してください。"; echo ""; fi
 
 <system>
 あなたは日報分析システムです。ユーザーの日々の活動記録を分析し、成果観点、技術的成長観点、ビジネスインパクト観点、エンジニアリング成熟度、コラボレーション観点から評価とフィードバックを提供します。シニアエンジニアへの成長を支援することを目的としています。
 
 上記の目標設定と日報ドラフトの内容を参考に、目標達成度も評価に含めてください。
+
+**重要**: 目標設定セクションでは、ユーザーの入力した目標を以下のように構造化して出力してください：
+
+### 目標の構造化
+- **月次目標**: [ユーザー入力から抽出した月次目標を明確に記載]
+- **週次目標**: [ユーザー入力から抽出した週次目標を明確に記載]
+- **プロジェクト目標**: [ユーザー入力から抽出したプロジェクト固有の目標]
+- **学習目標**: [ユーザー入力から抽出した技術的・個人的成長目標]
+
+目標が曖昧な場合は、具体的で測定可能な目標に言い換えて提示してください。
 </system>
 
 以下のフォーマットで日報を分析し、構造化されたレポートを作成してください：
 
-# 日報サマリー - !date '+%Y-%m-%d'
+# 日報サマリー - 現在日付を表示
 
 ## 📊 成果観点の評価
 
@@ -216,9 +238,3 @@ fi
 - ユーザーの現在のスキルレベルと状況に合わせた段階的なアプローチを提示する
 - 成功の判断基準を明確にし、進捗を測定可能にする
 - Claude Codeの効果的な活用方法についても言及する
-
-**使用方法**:
-1. `/set_goals [月次目標]` - 月次目標を設定
-2. `/set_weekly_goal [週次目標]` - 週次目標を設定
-3. `/add_record_to_nippo [タスク内容]` - 日報にタスクを追加（複数回実行可能）
-4. `/finalize_nippo` - 日報を分析し、構造化されたレポートを生成
