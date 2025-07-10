@@ -85,3 +85,7 @@ cd nippo
 **/nippo-finalize で自動整形**
 
 日報を書く心理的ハードルがめちゃくちゃ下がります。
+
+## 参考
+- [Claude CodeのSlash Commandsで日報を作成する](https://syu-m-5151.hatenablog.com/entry/2025/06/26/220245)
+- [**強い**エンジニアのなり方 - フィードバックサイクルを勝ち取る / grow one day each day](https://speakerdeck.com/soudai/grow-one-day-each-day)
